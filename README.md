@@ -65,4 +65,5 @@ npx playwright show-report
 - TypeScript — Type-safe test code
 - Page Object Model — Maintainable test architecture
 - GitHub Actions — CI/CD
+- Github Issues - bugs 
 - GitHub Wiki — Test plan & test cases documentation
