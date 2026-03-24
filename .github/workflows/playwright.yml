@@ -36,13 +36,11 @@ jobs:
       - name: Create credentials file
         run: |
           mkdir -p tests/fixtures
-          cat > tests/fixtures/credentials.ts << EOF
-          export const TEST_USER = {
-            email: '${{ secrets.TEST_EMAIL }}',
-            password: '${{ secrets.TEST_PASSWORD }}',
-          };
-          export const BASE_URL = 'https://atlas.atlasdevel5.com';
-          EOF
+          echo "export const TEST_USER = { email: '${{ secrets.TEST_EMAIL }}', password: '${{ secrets.TEST_PASSWORD }}' };" > tests/fixtures/credentials.ts
+          echo "export const BASE_URL = 'https://atlas.atlasdevel5.com';" >> tests/fixtures/credentials.ts
+
+      - name: Verify credentials file exists
+        run: cat tests/fixtures/credentials.ts
 
       - name: Run all tests
         if: ${{ github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == '' }}
