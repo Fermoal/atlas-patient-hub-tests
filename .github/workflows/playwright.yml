@@ -33,40 +33,36 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Create credentials file
+        run: |
+          mkdir -p tests/fixtures
+          cat > tests/fixtures/credentials.ts << EOF
+          export const TEST_USER = {
+            email: '${{ secrets.TEST_EMAIL }}',
+            password: '${{ secrets.TEST_PASSWORD }}',
+          };
+          export const BASE_URL = 'https://atlas.atlasdevel5.com';
+          EOF
+
       - name: Run all tests
         if: ${{ github.event.inputs.test_suite == 'all' || github.event.inputs.test_suite == '' }}
         run: npx playwright test
-        env:
-          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
-          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
       - name: Run auth tests
         if: ${{ github.event.inputs.test_suite == 'auth' }}
         run: npx playwright test tests/login.spec.ts
-        env:
-          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
-          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
       - name: Run appointments tests
         if: ${{ github.event.inputs.test_suite == 'appointments' }}
         run: npx playwright test tests/appointments.spec.ts
-        env:
-          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
-          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
       - name: Run billing tests
         if: ${{ github.event.inputs.test_suite == 'billing' }}
         run: npx playwright test tests/billing.spec.ts
-        env:
-          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
-          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
       - name: Run profile tests
         if: ${{ github.event.inputs.test_suite == 'profile' }}
         run: npx playwright test tests/profile.spec.ts
-        env:
-          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
-          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
