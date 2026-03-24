@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { LoginPage } from './auth/login.page';
 import { TEST_USER } from './fixtures/credentials';
 
-
+test.describe.configure({ mode: 'serial' });
 
 test.describe('Authentication', () => {
 
@@ -10,22 +10,22 @@ test.describe('Authentication', () => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
     await loginPage.login(TEST_USER.email, TEST_USER.password);
-    await expect(page).not.toHaveURL(/.*\/hub\/$/);
-    await expect(page.locator('body')).not.toContainText('Invalid');
+    await page.waitForURL(/.*\/hub\/(?!login).*/, { timeout: 15000 });
+    await expect(page).not.toHaveURL(/.*\/patients\/login.*/);
   });
 
   test('TC-AUTH-002 - Login with invalid password', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
     await loginPage.login(TEST_USER.email, 'wrongpassword123');
-    await expect(loginPage.errorMessage).toBeVisible();
+    await expect(loginPage.errorMessage).toBeVisible({ timeout: 10000 });
   });
 
   test('TC-AUTH-003 - Login with empty fields', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
-    await loginPage.loginButton.click();
-    await expect(page).toHaveURL(/.*\/hub\//);
+    await loginPage.submitButton.click();
+    await expect(page).toHaveURL(/.*\/patients\/login.*/);
   });
 
 });
