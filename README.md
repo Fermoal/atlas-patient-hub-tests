@@ -28,6 +28,22 @@ npm install
 npx playwright install
 ```
 
+### Credentials Setup
+This project requires a credentials file that is not included in the repo for security reasons.
+
+1. Copy the example file:
+```bash
+cp tests/fixtures/credentials.example.ts tests/fixtures/credentials.ts
+```
+
+2. Open `tests/fixtures/credentials.ts` and fill in the staging credentials:
+```typescript
+export const TEST_USER = {
+  email: 'your-email@example.com',
+  password: 'your-password',
+};
+```
+
 ### Run all tests
 ```bash
 npx playwright test
